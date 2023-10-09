@@ -1,0 +1,44 @@
+{
+  "name": "electron",
+  "version": "1.0.0",
+  "description": "Some description of the app",
+  "main": "main.js",
+  "build": {
+    "appId": "com.example.viabletree",
+    "productName": "Excel Processing",
+    "icon": "./playstore.png"
+  },
+  "files": [
+    "dist/**/*",
+    "renderer/**/*",
+    "node_modules/**/*",
+    "main.js",
+    "index.html"
+  ],
+  "mac": {
+    "target": "dmg"
+  },
+  "win": {
+    "target": "nsis"
+  },
+  "linux": {
+    "target": "deb"
+  },
+  "scripts": {
+    "postinstall": "electron-builder install-app-deps",
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^26.3.0",
+    "electron-builder": "^24.6.4",
+    "electron-rebuild": "^3.2.9"
+  },
+  "dependencies": {
+    "electron-toaster": "^2.0.4",
+    "jquery": "^3.7.1",
+    "xlsx": "^0.18.5"
+  }
+}
