@@ -1,6 +1,8 @@
-const { app, BrowserWindow, Menu } = require("electron");
+const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const path = require("path");
+
 app.setMaxListeners(15);
+
 let mainWindow;
 const isMac = process.platform === "darwin";
 const isDev = true;

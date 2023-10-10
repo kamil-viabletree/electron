@@ -1,5 +1,5 @@
-const { Notification } = require("electron");
 const XLSX = require("xlsx");
+const Swal = require("sweetalert2");
 
 document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("myForm").addEventListener("submit", function (e) {
@@ -22,15 +22,25 @@ document.addEventListener("DOMContentLoaded", function () {
         processFile(data, sequencrArr);
       };
       reader.readAsBinaryString(selectedFile);
-      console.log("::: form reset ::");
       document.getElementById("myForm").reset();
+      Swal.fire({
+        title: "Done!",
+        text: "Sheet processed successfully",
+        icon: "success",
+        confirmButtonText: "Cool",
+      });
     } else {
-      console.log(":::: selectedFileName Error ::::::");
+      Swal.fire({
+        title: "Error!",
+        text: "Konica Print sheet not found!",
+        icon: "error",
+        confirmButtonText: "Cool",
+      });
     }
   });
 
   function processFile(data, sequencrArr) {
-    const storeFile = "RR_10-04 Wed Konic.xlsx";
+    let storeFile = "RR_10-04 Wed Konic.xlsx";
 
     const workbook = XLSX.read(data, { type: "binary" });
 
@@ -79,13 +89,28 @@ document.addEventListener("DOMContentLoaded", function () {
           createNewSheet(printFiles, missingFiles, storeFile);
         } else {
           // error
-          console.log("1.No data found");
+          Swal.fire({
+            title: "Info!",
+            text: "No remmainings were found",
+            icon: "info",
+            confirmButtonText: "Cool",
+          });
         }
       } else {
-        console.log("2.No data found");
+        Swal.fire({
+          title: "Info!",
+          text: "No data found",
+          icon: "info",
+          confirmButtonText: "Cool",
+        });
       }
     } else {
-      console.log("3.No data found");
+      Swal.fire({
+        title: "Info!",
+        text: "No data found",
+        icon: "info",
+        confirmButtonText: "Cool",
+      });
     }
   }
 
