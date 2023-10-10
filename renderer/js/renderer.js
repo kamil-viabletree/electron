@@ -1,5 +1,6 @@
 const XLSX = require("xlsx");
 const Swal = require("sweetalert2");
+const path = require("path");
 
 document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("myForm").addEventListener("submit", function (e) {
@@ -133,5 +134,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Write the newWorkbook to a file
     XLSX.writeFile(newWorkbook, storeFile);
+
+    // Create an anchor element for downloading the file
+    const a = document.createElement("a");
+    a.href = path.join(__dirname, storeFile);
+    a.download = storeFile;
+
+    // Trigger a click event on the anchor element to initiate the download
+    a.click();
   }
 });
