@@ -9,8 +9,8 @@ const isDev = true;
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
-    width: isDev ? 1000 : 500,
-    height: 600,
+    width: 650,
+    height: 450,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -18,7 +18,7 @@ function createMainWindow() {
   });
 
   // Open the dev tools window on load
-  if (isDev) mainWindow.webContents.openDevTools();
+  // if (isDev) mainWindow.webContents.openDevTools();
 
   mainWindow.loadFile(path.join(__dirname, "renderer/index.html"));
 }
