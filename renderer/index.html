@@ -4,71 +4,109 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Security-Policy" content="script-src 'self'" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="script-src-elem 'self' https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
-    />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="script-src-elem 'self' https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-    />
+
     <title>ReRunPrep</title>
 
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      href="./css/bootstrap.min.css"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="stylesheet" href="./css/style.css">
+
 
     <script src="./js/renderer.js"></script>
   </head>
   <body>
-    <div class="container">
+    <div class="container my-lg-5">
       <div class="row d-flex justify-content-center align-items-center">
-        <form id="myForm">
-          <div class="form-group">
-            <label for="sequence-one">Sequence One</label>
-            <input
-              required
-              type="text"
-              class="form-control"
-              placeholder="Enter sequence one"
-              id="sequence-one"
-            />
+        <div class="col-lg-6 col-lg-offset-3 col-md-8 col-lg-offset-2 col-12">
+          <div class="row align-items-center">
+            <div class="col-10">
+              <div class="form-group">
+                <label for="storage-path">Storage Path</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="storage-path"
+                  placeholder="Set Storage Path"
+                />
+              </div>
+            </div>
+            <div class="align-items-center col-2 d-flex justify-content-center">
+              <div class="form-group mb-0 mt-3">
+                <button
+                  type="button"
+                  id="storage-path-button"
+                  class="btn btn-primary"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="sequence-two">Sequence Two</label>
-            <input
-              required
-              type="text"
-              class="form-control"
-              placeholder="Enter sequence two"
-              id="sequence-two"
-            />
-          </div>
-          <div class="form-group">
-            <label for="sequence-three">Sequence Three</label>
-            <input
-              required
-              type="text"
-              class="form-control"
-              placeholder="Enter sequence three"
-              id="sequence-three"
-            />
-          </div>
+          <hr />
+          <div class="col-lg-6 col-lg-offset-3 col-md-8 col-lg-offset-2 col-12">
+            <form id="myForm">
+              <div class="align-items-center dynamic-fields" id="dynamic-fields">
+                <div class="row sequence-field">
+                  <div class="col-10">
+                    <div class="form-group">
+                      <label for="sequence-three">Last Print</label>
+                      <input
+                        pattern="^(?!\s*$).+"
+                        required
+                        type="text"
+                        class="form-control sequence-field-value"
+                        placeholder="Enter Last Print"
+                        id="sequence-three"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-2">
+                    <button type="button" class="btn btn-primary font-weight-bolder add-btn" id="add-field"><i class="fa fa-add" ></i></button>
+                  </div>
+                </div>
+              </div>
+              
 
-          <div class="form-group ">
-            <input
-              required
-              type="file"
-              class="form-control-file border"
-              accept=".xlsx"
-              id="excel-file"
-            />
+              <!-- <div class="form-group">
+                <label for="sequence-two">Second To Last Print</label>
+                <input
+                  required
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Second To Last Print"
+                  id="sequence-two"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="sequence-one">Third To Last Print</label>
+                <input
+                  required
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Third To Last Print"
+                  id="sequence-one"
+                />
+              </div> -->
+
+              <div class="form-group">
+                <input
+                  required
+                  type="file"
+                  class="form-control-file border"
+                  accept=".xlsx"
+                  id="excel-file"
+                />
+              </div>
+              <div class="d-flex justify-content-center align-items-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </form>
           </div>
-          <div class="d-flex justify-content-center align-items-center">
-          <button type="submit" class="btn btn-primary">Submit</button>
         </div>
-        </form>
       </div>
     </div>
   </body>

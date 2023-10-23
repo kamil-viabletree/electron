@@ -9,8 +9,8 @@ const isDev = true;
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
-    width: 650,
-    height: 450,
+    width: 700,
+    height: 530,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,

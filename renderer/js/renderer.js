@@ -4,101 +4,229 @@ const path = require("path");
 const fs = require("fs");
 
 document.addEventListener("DOMContentLoaded", function () {
+  sequenceNameGenerator();
+  var add_field = document.getElementById("add-field");
+
+  // Add a click event listener dynamic-fields
+  add_field.addEventListener("click", function () {
+    dynamicFieldAdd();
+  });
+
+  function dynamicFieldAdd() {
+    const uuid = new Date().getTime();
+    const count = document.querySelectorAll(".sequence-field").length;
+    const name = sequenceNameGenerator(count+1);
+    const fieldHTML = `<div class="row sequence-field" id="${uuid}_field">
+        <div class="col-10">
+            <div class="form-group">
+                <label for="${uuid}">${name} To Last</label>
+                <input
+                    pattern="^(?!\s*$).+"
+                    required
+                    type="text"
+                    class="form-control sequence-field-value"
+                    placeholder="Enter ${name} To Last"
+                    id="${uuid}"
+                />
+            </div>
+        </div>
+        <div class="col-2">
+            <button type="button" class="btn btn-danger font-weight-bolder del-btn" id="${uuid}"><i class="fa fa-trash-alt"></i></button>
+        </div>
+    </div>`;
+
+    // Create a temporary container element
+    const tempContainer = document.createElement("div");
+    tempContainer.className = `row `;
+    tempContainer.innerHTML = fieldHTML;
+
+    // Get the actual field element from the container
+    const fieldElement = tempContainer.firstElementChild;
+
+    // Append the new field to the dynamic-fields container
+    document.querySelector(".dynamic-fields").appendChild(fieldElement);
+    deleteFieldsWithUUID();
+  }
+
+  function deleteFieldsWithUUID() {
+    var clickableDivs = document.querySelectorAll(".del-btn");
+    if (clickableDivs != null) {
+      clickableDivs.forEach(function (div) {
+        div.addEventListener("click", function () {
+          var clickedID = div.id;
+          let field = document.getElementById(`${clickedID}_field`);
+          if (field) {
+            field.remove();
+          }
+        });
+      });
+    }
+  }
+
   function createDirectoryIfNotExists(directoryPath) {
     if (!fs.existsSync(directoryPath)) {
       fs.mkdirSync(directoryPath, { recursive: true });
     }
   }
 
-  let directoryPath = "";
-  let dir = "";
-  let downloadDir = "";
-  if (process.platform == "linux") {
-    const components = __dirname.split("/");
-    if (components.length >= 2) {
-      downloadDir = components.slice(0, 3).join("/");
-      directoryPath = path.join(downloadDir, "Konica");
-      createDirectoryIfNotExists(directoryPath);
-    } else {
-      console.log("String does not contain enough components.");
-    }
-  } else {
-    downloadDir = __dirname.match(/^[A-Z]:/i)[0];
-    directoryPath = path.join(downloadDir, "Konica");
-    dir =
-      "E:/Dropbox (Stupell Industries)/Shared Picklists/ReRunPrep Picklists";
-    createDirectoryIfNotExists(directoryPath);
+  function sequenceNameGenerator(n) {
+    var special = [
+      "Zeroth",
+      "First",
+      "Second",
+      "Third",
+      "Fourth",
+      "Fifth",
+      "Sixth",
+      "Seventh",
+      "Eighth",
+      "Ninth",
+      "Tenth",
+      "Eleventh",
+      "Twelfth",
+      "Thirteenth",
+      "Fourteenth",
+      "Fifteenth",
+      "Sixteenth",
+      "Seventeenth",
+      "Eighteenth",
+      "Nineteenth",
+    ];
+    var deca = [
+      "Twent",
+      "Thirt",
+      "Fort",
+      "Fift",
+      "Sixt",
+      "Sevent",
+      "Eight",
+      "Ninet",
+    ];
+
+    if (n < 20) return special[n];
+    if (n % 10 === 0) return deca[Math.floor(n / 10) - 2] + "ieth";
+    return deca[Math.floor(n / 10) - 2] + "y " + special[n % 10];
   }
+
+  const downloadDir = __dirname.match(/^[A-Z]:/i)[0];
+  const directoryPath = path.join(downloadDir, "Konica");
+  let dir =
+    "E:/Stupell Industries Dropbox/Manufacturing and Printing/Shared Picklists/ReRunPrep Picklists";
+  createDirectoryIfNotExists(directoryPath);
+
+  const storagePath = localStorage.getItem("elec-storage-path");
+
+  if (storagePath === null) {
+    localStorage.setItem("elec-storage-path", dir);
+  } else {
+    dir = storagePath;
+  }
+  document.getElementById("storage-path").value = dir.replace(/\//g, "\\");
+  document.getElementById("storage-path-button").disabled = true;
+
+  document
+    .getElementById("storage-path")
+    .addEventListener("keyup", function (e) {
+      const newPath = document.getElementById("storage-path").value;
+      if (newPath == dir.replace(/\//g, "\\")) {
+        document.getElementById("storage-path-button").disabled = true;
+      } else {
+        document.getElementById("storage-path-button").disabled = false;
+      }
+    });
+
+  document
+    .getElementById("storage-path-button")
+    .addEventListener("click", function (e) {
+      const newPath = document.getElementById("storage-path").value;
+      if (newPath.trim() == "") {
+        Swal.fire({
+          title: "Info!",
+          text: "Path field should be pre filled!",
+          icon: "info",
+          confirmButtonText: "OK",
+        }).then((e) => {
+          if (e.isConfirmed) {
+            document.getElementById("storage-path").value = dir.replace(
+              /\//g,
+              "\\"
+            );
+            document.getElementById("storage-path-button").disabled = true;
+          }
+        });
+      } else {
+        localStorage.setItem(
+          "elec-storage-path",
+          newPath.replace(/\\/g, "/").trim()
+        );
+        dir = newPath.replace(/\\/g, "/").trim();
+        document.getElementById("storage-path-button").disabled = true;
+      }
+    });
 
   document.getElementById("myForm").addEventListener("submit", function (e) {
     e.preventDefault();
-    const seq_one = document.getElementById("sequence-one").value;
-    const seq_two = document.getElementById("sequence-two").value;
-    const seq_three = document.getElementById("sequence-three").value;
-    const sequencrArr = [seq_one, seq_two, seq_three];
+    const sequencrArr = [];
+    const field_values = document.querySelectorAll(".sequence-field-value");
+    const field_count = field_values.length;
+    field_values.forEach(e=>{
+      if(e.value.trim() != ""){
+        sequencrArr.push(e.value.trim())
+      }
+    });
     const excel_file = document.getElementById("excel-file");
 
-    if (
-      seq_one.trim() == "" ||
-      seq_two.trim() == "" ||
-      seq_three.trim() == ""
-    ) {
-      Swal.fire({
-        title: "Error!",
-        text: "All sequences should be pre filled!",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-    } else {
-      if (excel_file.files.length > 0) {
-        const selectedFile = excel_file.files[0];
-        const selectedFileName = selectedFile.name;
-        const pattern = /statusReport_([0-9]{2}-[0-9]{2} [A-Za-z]{3})/;
-        const match = pattern.exec(selectedFileName);
+    if (excel_file.files.length > 0) {
+      const selectedFile = excel_file.files[0];
+      const selectedFileName = selectedFile.name;
+      const pattern = /statusReport_/;
+      const match = pattern.exec(selectedFileName);
 
-        if (match) {
-          // const fileName = match[1];
-          const fileName = selectedFileName.replace("statusReport", "RR");
-          const reader = new FileReader();
+      if (match) {
+        // const fileName = match[1];
+        const fileName = selectedFileName.replace("statusReport", "RR");
+        const reader = new FileReader();
 
-          reader.onload = function (e) {
-            const data = e.target.result;
+        reader.onload = function (e) {
+          const data = e.target.result;
 
-            // const workbook = XLSX.read(data, { type: "binary" });
-            processFile(data, sequencrArr, fileName, dir, downloadDir);
-          };
-          reader.readAsBinaryString(selectedFile);
-        } else {
-          Swal.fire({
-            title: "Error!",
-            text: "Wrong file",
-            icon: "error",
-            confirmButtonText: "OK",
-          });
-        }
+          // const workbook = XLSX.read(data, { type: "binary" });
+          processFile(data, sequencrArr, field_count, fileName, dir);
+        };
+        reader.readAsBinaryString(selectedFile);
       } else {
         Swal.fire({
           title: "Error!",
-          text: "Konica Print sheet not found!",
+          text: "Wrong file",
           icon: "error",
           confirmButtonText: "OK",
         });
       }
+    } else {
+      Swal.fire({
+        title: "Error!",
+        text: "Konica Print sheet not found!",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
+
   });
 
-  function processFile(data, sequencrArr, fileName, dir, downloadDir) {
+  function processFile(data, sequencrArr, field_count, fileName, dir) {
     let storeFile = fileName;
 
     const workbook = XLSX.read(data, { type: "binary" });
 
-    const sheetName = workbook.SheetNames[2];
-    if (sheetName) {
-      const sheet = workbook.Sheets[sheetName];
+    const sheetNameIndex = workbook.SheetNames.indexOf("KonicaPrint");
+
+    // KonicaPrint
+    if (sheetNameIndex !== -1) {
+      const sheet = workbook.Sheets[workbook.SheetNames[sheetNameIndex]];
       if (sheet) {
         const jsonData = XLSX.utils.sheet_to_json(sheet);
 
-        let count = 3;
+        let count = field_count;
         const printFiles = [];
         const missingFiles = [];
 
@@ -125,15 +253,16 @@ document.addEventListener("DOMContentLoaded", function () {
               if (sequencrArr.includes(jsonData[i]["Ready to Print Konica"])) {
                 count--;
               } else {
-                if (count <= 2) {
+                if (field_count != 0 && count <= field_count - 1) {
                   count++;
                 }
               }
             }
           }
         }
+
         if (printFiles.length > 0 || missingFiles.length > 0) {
-          createNewSheet(printFiles, missingFiles, storeFile, dir, downloadDir);
+          createNewSheet(printFiles, missingFiles, storeFile, dir);
         } else {
           // error
           Swal.fire({
@@ -153,39 +282,12 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     } else {
       Swal.fire({
-        title: "Info!",
-        text: "No data found",
-        icon: "info",
+        title: "Error!",
+        text: "KonicaPrint sheet not found",
+        icon: "error",
         confirmButtonText: "OK",
       });
     }
-  }
-
-  function getCurrentDateTimeString() {
-    var currentDate = new Date();
-
-    var year = currentDate.getFullYear();
-    var month = (currentDate.getMonth() + 1).toString().padStart(2, "0"); // Adding 1 to month to make it 1-12 and padding with '0'.
-    var day = currentDate.getDate().toString().padStart(2, "0"); // Padding with '0'.
-    var hours = currentDate.getHours().toString().padStart(2, "0");
-    var minutes = currentDate.getMinutes().toString().padStart(2, "0");
-    var seconds = currentDate.getSeconds().toString().padStart(2, "0");
-
-    // Create the formatted date and time string
-    var dateTimeString =
-      year +
-      "-" +
-      month +
-      "-" +
-      day +
-      "_" +
-      hours +
-      ":" +
-      minutes +
-      ":" +
-      seconds;
-
-    return dateTimeString;
   }
 
   function isFileOpen(filePath) {
@@ -202,13 +304,7 @@ document.addEventListener("DOMContentLoaded", function () {
    * New Sheet creating
    */
 
-  function createNewSheet(
-    printFiles,
-    missingFiles,
-    storeFile,
-    dir,
-    downloadDir
-  ) {
+  function createNewSheet(printFiles, missingFiles, storeFile, dir) {
     // Create a new newWorkbook
     const newWorkbook = XLSX.utils.book_new();
 
@@ -222,16 +318,17 @@ document.addEventListener("DOMContentLoaded", function () {
     XLSX.utils.book_append_sheet(newWorkbook, worksheet, "Sheet1");
 
     // Write the newWorkbook to a file
+    let downloadDir = "";
     let directoryPath = "";
     if (fs.existsSync(dir)) {
       // If directory exists
       directoryPath = path.join(dir, `${storeFile}`);
     } else {
+      downloadDir = __dirname.match(/^[A-Z]:/i)[0];
       directoryPath = path.join(downloadDir, `Konica/${storeFile}`);
     }
 
     if (isFileOpen(directoryPath)) {
-      s;
       Swal.fire({
         title: "Write Error!",
         text: `This is open ${directoryPath}, please close to proceed`,
