@@ -7,13 +7,12 @@
 
     <title>ReRunPrep</title>
 
+    <link rel="stylesheet" href="./css/bootstrap.min.css" />
     <link
       rel="stylesheet"
-      href="./css/bootstrap.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-    <link rel="stylesheet" href="./css/style.css">
-
+    <link rel="stylesheet" href="./css/style.css" />
 
     <script src="./js/renderer.js"></script>
   </head>
@@ -24,7 +23,12 @@
           <div class="row align-items-center">
             <div class="col-10">
               <div class="form-group">
-                <label for="storage-path">Storage Path</label>
+                <label for="storage-path"
+                  >Storage Path
+                  <span class="info_msg"
+                    >(SKIP UNLESS SOMETHING IS DIFFERENT)</span
+                  ></label
+                >
                 <input
                   type="text"
                   class="form-control"
@@ -48,7 +52,26 @@
           <hr />
           <div class="col-lg-6 col-lg-offset-3 col-md-8 col-lg-offset-2 col-12">
             <form id="myForm">
-              <div class="align-items-center dynamic-fields" id="dynamic-fields">
+              <div class="row">
+                <div class="col-10">
+                  <div class="form-group">
+                    <label for="excel-file" class="label_color"
+                      >Pick PickList To ReRun</label
+                    >
+                    <input
+                      required
+                      type="file"
+                      class="form-control-file border"
+                      accept=".xlsx"
+                      id="excel-file"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="align-items-center dynamic-fields"
+                id="dynamic-fields"
+              >
                 <div class="row sequence-field">
                   <div class="col-10">
                     <div class="form-group">
@@ -64,42 +87,51 @@
                     </div>
                   </div>
                   <div class="col-2">
-                    <button type="button" class="btn btn-primary font-weight-bolder add-btn" id="add-field"><i class="fa fa-add" ></i></button>
+                    <button
+                      type="button"
+                      class="btn btn-primary font-weight-bolder add-btn"
+                      id="add-field"
+                    >
+                      <i class="fa fa-add"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="row sequence-field" id="sdflk23lklwk023oij_field">
+                  <div class="col-10">
+                    <div class="form-group">
+                      <label for="sdflk23lklwk023oij"
+                        >Second To Last Print</label
+                      >
+                      <input
+                        pattern="^(?!\s*$).+"
+                        required
+                        type="text"
+                        class="form-control sequence-field-value"
+                        placeholder="Enter Second To Last Print"
+                        id="sdflk23lklwk023oij"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-2">
+                    <button
+                      type="button"
+                      class="btn btn-danger font-weight-bolder del-btn"
+                      id="sdflk23lklwk023oij"
+                    >
+                      <i class="fa fa-trash-alt"></i>
+                    </button>
                   </div>
                 </div>
               </div>
-              
-
-              <!-- <div class="form-group">
-                <label for="sequence-two">Second To Last Print</label>
+              <div class="form-group form-check">
                 <input
-                  required
-                  type="text"
-                  class="form-control"
-                  placeholder="Enter Second To Last Print"
-                  id="sequence-two"
+                  type="checkbox"
+                  class="form-check-input"
+                  id="only_missing"
                 />
-              </div>
-
-              <div class="form-group">
-                <label for="sequence-one">Third To Last Print</label>
-                <input
-                  required
-                  type="text"
-                  class="form-control"
-                  placeholder="Enter Third To Last Print"
-                  id="sequence-one"
-                />
-              </div> -->
-
-              <div class="form-group">
-                <input
-                  required
-                  type="file"
-                  class="form-control-file border"
-                  accept=".xlsx"
-                  id="excel-file"
-                />
+                <label class="form-check-label label_color" for="only_missing"
+                  >Only ReRun 'Missing Files'</label
+                >
               </div>
               <div class="d-flex justify-content-center align-items-center">
                 <button type="submit" class="btn btn-primary">Submit</button>

@@ -39,7 +39,7 @@
   "dependencies": {
     "electron-toaster": "^2.0.4",
     "jquery": "^3.7.1",
-    "sweetalert2": "^11.7.32",
+    "sweetalert2": "^11.6.13",
     "xlsx": "^0.18.5"
   }
 }

@@ -28,3 +28,14 @@ body::-webkit-scrollbar-thumb:hover {
     border: 2px solid transparent;
     cursor: pointer;
 }
+
+.info_msg{
+    font-size: 12px;
+    font-weight: 700;
+    color: #007bff;
+}
+.label_color{
+    font-size: 12px;
+    font-weight: 700;
+    color: #007bff;
+}
